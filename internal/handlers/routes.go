@@ -116,6 +116,7 @@ func (r *Routes) Register() http.Handler {
 	router.Handle("/admin/tags", requireAdmin.ThenFunc(r.tags))
 	router.Handle("/admin/tags/delete/", requireAdmin.ThenFunc(r.tagDelete)) // tagID at the end
 	router.Handle("/admin/tags/create", requireAdmin.ThenFunc(r.tagCreate))
+	router.Handle("/admin/dashboard", requireAdmin.ThenFunc(r.dashboard))
 
 	// Standard middleware chain applied to router itself -> used in all routes
 	standard := mids.New(r.recoverPanic, r.limitRate, r.secureHeaders)

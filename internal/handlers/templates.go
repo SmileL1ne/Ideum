@@ -1,22 +1,25 @@
 package handlers
 
 import (
+	"encoding/json"
 	"forum/internal/entity"
 	"forum/web"
 	"html/template"
 	"io/fs"
+	"log"
 	"path/filepath"
 	"strings"
 )
 
 type Models struct {
-	Posts         []entity.PostView
-	Post          entity.PostView
-	Tags          []entity.TagEntity
-	Notifications []entity.Notification
-	Requests      []entity.Request
-	Reports       []entity.Report
-	Users         []entity.UserEntity
+	Posts          []entity.PostView
+	Post           entity.PostView
+	Tags           []entity.TagEntity
+	Notifications  []entity.Notification
+	Requests       []entity.Request
+	Reports        []entity.Report
+	Users          []entity.UserEntity
+	DashboardStats entity.DashboardStats
 }
 
 type templateData struct {
@@ -33,8 +36,18 @@ type errData struct {
 }
 
 var fm = template.FuncMap{
-	"low": strings.ToLower,
-	"cap": strings.Title,
+	"low":  strings.ToLower,
+	"cap":  strings.Title,
+	"json": toJSON,
+}
+
+func toJSON(v interface{}) string {
+	a, err := json.Marshal(v)
+	if err != nil {
+		log.Println("Error marshalling to JSON:", err)
+		return "[]"
+	}
+	return string(a)
 }
 
 // newTemplateCache initializes all templates and stores them in map
