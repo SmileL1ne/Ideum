@@ -374,3 +374,26 @@ func (r *Routes) tagCreate(w http.ResponseWriter, req *http.Request) {
 
 	http.Redirect(w, req, "/admin/tags", http.StatusSeeOther)
 }
+
+func (r *Routes) dashboard(w http.ResponseWriter, req *http.Request) {
+	if req.Method != http.MethodGet {
+		r.methodNotAllowed(w)
+		return
+	}
+
+	data, err := r.newTemplateData(req)
+	if err != nil {
+		r.serverError(w, req, err)
+		return
+	}
+
+	stats, err := r.services.User.GetDashboardStats()
+	if err != nil {
+		r.serverError(w, req, err)
+		return
+	}
+
+	data.Models.DashboardStats = stats
+
+	r.render(w, req, http.StatusOK, "dashboard.html", data)
+}

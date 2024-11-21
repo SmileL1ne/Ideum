@@ -1,0 +1,475 @@
+{{define "title"}} Rabbit {{end}}
+
+{{define "main"}}
+
+<div class="base">
+    <div class="post-feed">
+        <!-- Quantitative Metrics -->
+        <!-- Total Users -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Total Users</h1>
+                </div>
+                <div class="post-text">
+                    <p>{{.Models.DashboardStats.TotalUsers}}</p>
+                </div>
+            </div>
+        </div>
+        <!-- Total Posts -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Total Posts</h1>
+                </div>
+                <div class="post-text">
+                    <p>{{.Models.DashboardStats.TotalPosts}}</p>
+                </div>
+            </div>
+        </div>
+        <!-- Total Comments -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Total Comments</h1>
+                </div>
+                <div class="post-text">
+                    <p>{{.Models.DashboardStats.TotalComments}}</p>
+                </div>
+            </div>
+        </div>
+        <!-- Total Likes -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Total Likes</h1>
+                </div>
+                <div class="post-text">
+                    <p>{{.Models.DashboardStats.TotalLikes}}</p>
+                </div>
+            </div>
+        </div>
+        <!-- Total Dislikes -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Total Dislikes</h1>
+                </div>
+                <div class="post-text">
+                    <p>{{.Models.DashboardStats.TotalDislikes}}</p>
+                </div>
+            </div>
+        </div>
+        <!-- Top Users by Posts -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Top Users by Posts</h1>
+                </div>
+                <div class="post-text">
+                    <ul>
+                        {{range .Models.DashboardStats.TopUsersByPosts}}
+                        <li>{{.Username}} - Posts: {{.PostCount}}</li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Top Users by Comments -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Top Users by Comments</h1>
+                </div>
+                <div class="post-text">
+                    <ul>
+                        {{range .Models.DashboardStats.TopUsersByComments}}
+                        <li>{{.Username}} - Comments: {{.CommentCount}}</li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Most Popular Tags -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Most Popular Tags</h1>
+                </div>
+                <div class="post-text">
+                    <ul>
+                        {{range .Models.DashboardStats.MostPopularTags}}
+                        <li>{{.TagName}} - Used in {{.UsageCount}} posts</li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Qualitative Metrics -->
+        <!-- Average Post Length -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Average Post Length</h1>
+                </div>
+                <div class="post-text">
+                    <p>{{printf "%.2f" .Models.DashboardStats.AveragePostLength}} words</p>
+                </div>
+            </div>
+        </div>
+        <!-- Average Comment Length -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Average Comment Length</h1>
+                </div>
+                <div class="post-text">
+                    <p>{{printf "%.2f" .Models.DashboardStats.AverageCommentLength}} words</p>
+                </div>
+            </div>
+        </div>
+        <!-- Top Keywords in Posts -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Top Keywords in Posts</h1>
+                </div>
+                <div class="post-text">
+                    <ul>
+                        {{range .Models.DashboardStats.TopKeywordsInPosts}}
+                        <li>{{.Keyword}} - {{.Frequency}} times</li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Top Keywords in Comments -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Top Keywords in Comments</h1>
+                </div>
+                <div class="post-text">
+                    <ul>
+                        {{range .Models.DashboardStats.TopKeywordsInComments}}
+                        <li>{{.Keyword}} - {{.Frequency}} times</li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Sample Posts -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Recent Sample Posts</h1>
+                </div>
+                <div class="post-text">
+                    <ul>
+                        {{range .Models.DashboardStats.SamplePosts}}
+                        <li>
+                            <b>{{.Username}}</b>: {{.Content}}
+                        </li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Sample Comments -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Recent Sample Comments</h1>
+                </div>
+                <div class="post-text">
+                    <ul>
+                        {{range .Models.DashboardStats.SampleComments}}
+                        <li>
+                            <b>{{.Username}}</b>: {{.Content}}
+                        </li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Response Time -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Average Response Time</h1>
+                </div>
+                <div class="post-text">
+                    <p>{{printf "%.2f" .Models.DashboardStats.ResponseTime.AverageResponseTime}} seconds</p>
+                </div>
+            </div>
+        </div>
+        <!-- Sentiment Analysis -->
+        <!-- Post Sentiments -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Post Sentiments</h1>
+                </div>
+                <div class="post-text">
+                    <ul>
+                        <li>Positive: {{.Models.DashboardStats.PostSentiments.Positive}}</li>
+                        <li>Neutral: {{.Models.DashboardStats.PostSentiments.Neutral}}</li>
+                        <li>Negative: {{.Models.DashboardStats.PostSentiments.Negative}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Comment Sentiments -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Comment Sentiments</h1>
+                </div>
+                <div class="post-text">
+                    <ul>
+                        <li>Positive: {{.Models.DashboardStats.CommentSentiments.Positive}}</li>
+                        <li>Neutral: {{.Models.DashboardStats.CommentSentiments.Neutral}}</li>
+                        <li>Negative: {{.Models.DashboardStats.CommentSentiments.Negative}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Engagement Metrics -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Dashboard</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Engagement Metrics</h1>
+                </div>
+                <div class="post-text">
+                    <ul>
+                        <li>Average Posts per User: {{printf "%.2f" .Models.DashboardStats.Engagement.AveragePostsPerUser}}</li>
+                        <li>Average Comments per User: {{printf "%.2f" .Models.DashboardStats.Engagement.AverageCommentsPerUser}}</li>
+                        <li>Average Likes Received per User: {{printf "%.2f" .Models.DashboardStats.Engagement.AverageLikesReceived}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Notification Metrics -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Notifications</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Notification Metrics</h1>
+                </div>
+                <div class="post-text">
+                    <ul>
+                        <li>Total Notifications Sent: {{.Models.DashboardStats.NotificationStats.TotalSent}}</li>
+                        <li>Total Notifications Received: {{.Models.DashboardStats.NotificationStats.TotalReceived}}</li>
+                    </ul>
+                    <br>
+                    <h2>Notifications by Type</h2>
+                    <ul>
+                        {{range .Models.DashboardStats.NotificationStats.NotificationsByType}}
+                        <li>{{.Type}}: {{.Count}}</li>
+                        {{end}}
+                    </ul>
+                    <br>
+                    <h2>Top Notification Senders</h2>
+                    <ul>
+                        {{range .Models.DashboardStats.NotificationStats.TopSenders}}
+                        <li>{{.Username}}: {{.Count}} notifications sent</li>
+                        {{end}}
+                    </ul>
+                    <br>
+                    <h2>Top Notification Receivers</h2>
+                    <ul>
+                        {{range .Models.DashboardStats.NotificationStats.TopReceivers}}
+                        <li>{{.Username}}: {{.Count}} notifications received</li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Report Metrics -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Reports</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Report Metrics</h1>
+                </div>
+                <div class="post-text">
+                    <ul>
+                        <li>Total Reports Filed: {{.Models.DashboardStats.ReportStats.TotalReports}}</li>
+                    </ul>
+                    <br>
+                    <h2>Reports by Reason</h2>
+                    <ul>
+                        {{range .Models.DashboardStats.ReportStats.ReportsByReason}}
+                        <li>{{.Reason}}: {{.Count}} reports</li>
+                        {{end}}
+                    </ul>
+                    <br>
+                    <h2>Top Reported Users</h2>
+                    <ul>
+                        {{range .Models.DashboardStats.ReportStats.TopReportedUsers}}
+                        <li>{{.Username}}: {{.Count}} reports</li>
+                        {{end}}
+                    </ul>
+                    <br>
+                    <h2>Top Reported Content</h2>
+                    <ul>
+                        {{range .Models.DashboardStats.ReportStats.TopReportedContent}}
+                        <li>{{.Type | cap}} ID {{.ContentID}}: {{.Count}} reports</li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Image Metrics -->
+        <div class="post">
+            <div class="post-content">
+                <div class="post-top-info">
+                    <div class="post-top-user">
+                        <img src="/static/img/ava/user.png" alt="user-ava">
+                        <p>Image Usage</p>
+                    </div>
+                </div>
+                <div class="post-header">
+                    <h1>Image Metrics</h1>
+                </div>
+                <div class="post-text">
+                    <ul>
+                        <li>Total Images Uploaded: {{.Models.DashboardStats.ImageStats.TotalImages}}</li>
+                        <li>Percentage of Posts with Images: {{printf "%.2f" .Models.DashboardStats.ImageStats.PercentagePostsWithImages}}%</li>
+                    </ul>
+                    <br>
+                    <h2>Top Posts with Images</h2>
+                    <ul>
+                        {{range .Models.DashboardStats.ImageStats.TopPostsWithImages}}
+                        <li>Post ID {{.PostID}} - "{{.Title}}" with Image: {{.ImageName}}</li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+{{end}}
+

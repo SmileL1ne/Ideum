@@ -5,6 +5,7 @@ import (
 	"forum/internal/entity"
 	"forum/internal/repository/user"
 	"forum/internal/validator"
+	"github.com/cdipaolo/sentiment"
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
@@ -30,6 +31,8 @@ type IUserService interface {
 	GetUsers() (*[]entity.UserEntity, error)
 	FindNotification(nType string, userFrom, userTo int) (int, error)
 	GetNotificationsCount(userID int) (int, error)
+
+	GetDashboardStats() (entity.DashboardStats, error)
 }
 
 type userService struct {
@@ -208,4 +211,222 @@ func (us *userService) GetUsers() (*[]entity.UserEntity, error) {
 
 func (us *userService) FindNotification(nType string, userFrom, userTo int) (int, error) {
 	return us.userRepo.FindNotification(nType, userFrom, userTo)
+}
+
+func (us *userService) GetDashboardStats() (entity.DashboardStats, error) {
+	var stats entity.DashboardStats
+	var err error
+
+	// Quantitative Metrics
+	stats.TotalUsers, err = us.userRepo.GetTotalUsers()
+	if err != nil {
+		return stats, err
+	}
+
+	stats.TotalPosts, err = us.userRepo.GetTotalPosts()
+	if err != nil {
+		return stats, err
+	}
+
+	stats.TotalComments, err = us.userRepo.GetTotalComments()
+	if err != nil {
+		return stats, err
+	}
+
+	stats.TotalLikes, err = us.userRepo.GetTotalLikes()
+	if err != nil {
+		return stats, err
+	}
+
+	stats.TotalDislikes, err = us.userRepo.GetTotalDislikes()
+	if err != nil {
+		return stats, err
+	}
+
+	stats.TopUsersByPosts, err = us.userRepo.GetTopUsersByPosts(5)
+	if err != nil {
+		return stats, err
+	}
+
+	stats.TopUsersByComments, err = us.userRepo.GetTopUsersByComments(5)
+	if err != nil {
+		return stats, err
+	}
+
+	stats.MostPopularTags, err = us.userRepo.GetMostPopularTags(3)
+	if err != nil {
+		return stats, err
+	}
+
+	// Qualitative Metrics
+	stats.AveragePostLength, err = us.userRepo.GetAveragePostLength()
+	if err != nil {
+		return stats, err
+	}
+
+	stats.AverageCommentLength, err = us.userRepo.GetAverageCommentLength()
+	if err != nil {
+		return stats, err
+	}
+
+	stats.TopKeywordsInPosts, err = us.userRepo.GetTopKeywordsInPosts(10)
+	if err != nil {
+		return stats, err
+	}
+
+	stats.TopKeywordsInComments, err = us.userRepo.GetTopKeywordsInComments(10)
+	if err != nil {
+		return stats, err
+	}
+
+	stats.SamplePosts, err = us.userRepo.GetSamplePosts(3)
+	if err != nil {
+		return stats, err
+	}
+
+	stats.SampleComments, err = us.userRepo.GetSampleComments(5)
+	if err != nil {
+		return stats, err
+	}
+
+	avgResponseTime, err := us.userRepo.GetAverageResponseTime()
+	if err != nil {
+		return stats, err
+	}
+	stats.ResponseTime = entity.ResponseTime{AverageResponseTime: avgResponseTime}
+
+	postSentiments, commentSentiments, err := us.getSentimentStats()
+	if err != nil {
+		return stats, err
+	}
+	stats.PostSentiments = postSentiments
+	stats.CommentSentiments = commentSentiments
+
+	stats.Engagement, err = us.userRepo.GetEngagementStats()
+	if err != nil {
+		return stats, err
+	}
+
+	totalSent, totalReceived, err := us.userRepo.GetNotificationVolume()
+	if err != nil {
+		return stats, err
+	}
+
+	types, err := us.userRepo.GetNotificationsByType()
+	if err != nil {
+		return stats, err
+	}
+
+	topSenders, err := us.userRepo.GetTopNotificationSenders(3) // Top 5
+	if err != nil {
+		return stats, err
+	}
+
+	topReceivers, err := us.userRepo.GetTopNotificationReceivers(3) // Top 5
+	if err != nil {
+		return stats, err
+	}
+
+	stats.NotificationStats = entity.NotificationStats{
+		TotalSent:           totalSent,
+		TotalReceived:       totalReceived,
+		NotificationsByType: types,
+		TopSenders:          topSenders,
+		TopReceivers:        topReceivers,
+	}
+
+	totalReports, err := us.userRepo.GetTotalReports()
+	if err != nil {
+		return stats, err
+	}
+
+	reportsByReason, err := us.userRepo.GetReportsByReason()
+	if err != nil {
+		return stats, err
+	}
+
+	topReportedUsers, err := us.userRepo.GetTopReportedUsers(5) // Top 5
+	if err != nil {
+		return stats, err
+	}
+
+	topReportedContent, err := us.userRepo.GetTopReportedContent(5) // Top 5
+	if err != nil {
+		return stats, err
+	}
+
+	stats.ReportStats = entity.ReportStats{
+		TotalReports:       totalReports,
+		ReportsByReason:    reportsByReason,
+		TopReportedUsers:   topReportedUsers,
+		TopReportedContent: topReportedContent,
+	}
+
+	totalImages, err := us.userRepo.GetTotalImages()
+	if err != nil {
+		return stats, err
+	}
+
+	percentage, err := us.userRepo.GetPercentagePostsWithImages()
+	if err != nil {
+		return stats, err
+	}
+
+	topPosts, err := us.userRepo.GetTopPostsWithImages(3)
+	if err != nil {
+		return stats, err
+	}
+
+	stats.ImageStats = entity.ImageStats{
+		TotalImages:               totalImages,
+		PercentagePostsWithImages: percentage,
+		TopPostsWithImages:        topPosts,
+	}
+
+	return stats, nil
+}
+
+func (us *userService) getSentimentStats() (entity.SentimentStats, entity.SentimentStats, error) {
+	postContents, err := us.userRepo.GetAllPostContents()
+	if err != nil {
+		return entity.SentimentStats{}, entity.SentimentStats{}, err
+	}
+
+	commentContents, err := us.userRepo.GetAllCommentContents()
+	if err != nil {
+		return entity.SentimentStats{}, entity.SentimentStats{}, err
+	}
+
+	model, err := sentiment.Restore()
+	if err != nil {
+		return entity.SentimentStats{}, entity.SentimentStats{}, err
+	}
+
+	postSentiments := entity.SentimentStats{}
+	for _, content := range postContents {
+		analysis := model.SentimentAnalysis(content, sentiment.English)
+		switch analysis.Score {
+		case 0:
+			postSentiments.Negative++
+		case 1:
+			postSentiments.Neutral++
+		case 2:
+			postSentiments.Positive++
+		}
+	}
+
+	commentSentiments := entity.SentimentStats{}
+	for _, content := range commentContents {
+		analysis := model.SentimentAnalysis(content, sentiment.English)
+		switch analysis.Score {
+		case 0:
+			commentSentiments.Negative++
+		case 1:
+			commentSentiments.Neutral++
+		case 2:
+			commentSentiments.Positive++
+		}
+	}
+
+	return postSentiments, commentSentiments, nil
 }
